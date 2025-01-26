@@ -1,0 +1,14 @@
+{
+  "name": "Unit Converter",
+  "alias": "CONV",
+  "version": "0.0.1-b",
+  "author": "MaxTheSpy",
+  "description": "Converts various units.",
+  "main": "CONV.py",
+  "dependencies": [""],
+  "required_version": ">=1.0.3",
+  "features": [
+      ""
+  ],
+  "ui": "plugins/STS-PLUGIN-CONV/CONV.ui"
+}
