@@ -40,6 +40,9 @@ class CONVApp(QtWidgets.QWidget):
         self.select_converter.addItem("Energy")             # Energy Converter
         self.select_converter.addItem("Power")              # Power Converter
         self.select_converter.addItem("Pressure")           # Pressure Converter
+        self.select_converter.addItem("Velocity")           # Velocity Converter
+        self.select_converter.addItem("Area")               # Area Converter
+        self.select_converter.addItem("Data Storage")       # Data Storage Converter
 
     def update_conversion_units(self):
         """Update the unit selection based on the chosen converter."""
@@ -99,6 +102,25 @@ class CONVApp(QtWidgets.QWidget):
             units = [
                 "Pascal (Pa)", "Bar", "Atmosphere (atm)", "Pounds Per Square Inch (psi)", "Torr", "Millimeters of Mercury (mmHg)"
             ]
+
+        elif converter == "Velocity":
+            units = [
+                "Meters per second (m/s)", "Kilometers per hour (km/h)", "Miles per hour (mph)", 
+                "Knots", "Mach"
+            ]
+
+        elif converter == "Area":
+            units = [
+                "Square Meter (m²)", "Square Kilometer (km²)", "Square Foot (ft²)", "Square Yard (yd²)"
+                "Acre", "Hectare", "Square Mile (mi²)", "Square Inch (in²)"
+            ]
+
+        elif converter == "Data Storage":
+            units = [
+                "Bit", "Byte (B)", "Kilobyte (KB)", "Megabyte (MB)", "Gigabyte (GB)", "Terabyte (TB)",
+                "Petabyte (PB)", "Exabyte (EB)", "Zettabyte (ZB)" , "Yottabyte (YB)"
+            ]
+
         else:
             units = []  # Fallback for unknown converters
 
@@ -117,6 +139,9 @@ class CONVApp(QtWidgets.QWidget):
         from unit_converters.energy import convert_energy
         from unit_converters.power import convert_power
         from unit_converters.pressure import convert_pressure
+        from unit_converters.velocity import convert_velocity
+        from unit_converters.area import convert_area
+        from unit_converters.data_storage import convert_data_storage
 
         try:
             # Retrieve inputs from the UI
@@ -156,6 +181,15 @@ class CONVApp(QtWidgets.QWidget):
 
             elif converter == "Pressure":
                 result, steps = convert_pressure(value, from_unit, to_unit)
+
+            elif converter == "Velocity":
+                result, steps = convert_velocity(value, from_unit, to_unit)
+
+            elif converter == "Area":
+                result, steps = convert_area(value, from_unit, to_unit)
+
+            elif converter == "Data Storage":
+                result, steps = convert_data_storage(value, from_unit, to_unit)
 
             else:
                 self.display_results.append("Error: No converter selected.")
