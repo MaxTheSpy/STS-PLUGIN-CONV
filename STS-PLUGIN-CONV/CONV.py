@@ -7,8 +7,6 @@ from PyQt5 import QtWidgets, uic # type: ignore
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
-from unit_converters.temperature import convert_temperature  # Import the converter
-
 class CONVApp(QtWidgets.QWidget):
     def __init__(self, parent=None, logger=None):
         super().__init__(parent)
@@ -34,9 +32,14 @@ class CONVApp(QtWidgets.QWidget):
 
     def load_converters(self):
         """Populate the select_converter combobox with available converters."""
-        self.select_converter.addItem("Select Converter")  # Default label
-        self.select_converter.addItem("Temperature")       # Temperature converter
-        self.select_converter.addItem("Distance")          # Distance converter
+        self.select_converter.addItem("Temperature")        # Temperature converter
+        self.select_converter.addItem("Distance")           # Distance converter
+        self.select_converter.addItem("Weight")             # Weight Converter
+        self.select_converter.addItem("Fluids")             # Fluids Converter
+        self.select_converter.addItem("Time")               # Time converter
+        self.select_converter.addItem("Energy")             # Energy Converter
+        self.select_converter.addItem("Power")              # Power Converter
+        self.select_converter.addItem("Pressure")           # Pressure Converter
 
     def update_conversion_units(self):
         """Update the unit selection based on the chosen converter."""
@@ -45,20 +48,76 @@ class CONVApp(QtWidgets.QWidget):
         self.select_to.clear()
 
         if converter == "Temperature":
-            units = ["Celsius", "Fahrenheit", "Kelvin"]
-            self.select_from.addItems(units)
-            self.select_to.addItems(units)
+            units = [
+                "Celsius (°C)", "Fahrenheit (°F)", "Kelvin (K)", "Rankine (°R)", 
+                "Delisle (°De)", "Newton (°N)", "Réaumur (°Re)", "Rømer (°Rø)"
+            ]
+        elif converter == "Distance":
+            units = [
+                "Foot (ft)", "Yard (yd)", "Mile (mi)", "Nautical Mile (NM)", "Centimeter (cm)", "Meter (m)", 
+                "kilometer (km)", "Nanometer (nm)", "Micrometer (µm)", "League (lea)", "Chain (ch)", 
+                "Rod (rd)", "Cubit (cbt)", "furlong (fur)", "Inch (in)", "Astronomical Unit (AU)", 
+                "Light-Year (ly)", "Parsec (pc)", "Planck Length (lP)", "Fathom (fath)", "Hand (hand)", 
+                "Perch (perch)", "Palm (palm)", "Barleycorn (barleycorn)", "Ell (ell)", "Span (span)", 
+                "Step (step)", "Smoot (sm)"
+            ]
+        elif converter == "Weight":
+            units = [
+                "Milligram (mg)", "Centigram (cg)", "Decigram (dg)", "Gram (g)", "Kilogram (kg)", "Metric Ton (t)",
+                "Ounce (oz)", "Pound (lb)", "Stone (st)", "US Hundredweight (cwt)", "UK Hundredweight (cwt)", 
+                "US Ton (Short Ton)", "UK Ton (Long Ton)", "Grain (gr)", "Pennyweight (dwt)", "Troy Ounce (oz t)", 
+                "Troy Pound (lb t)", "Carat (ct)", "Dram (dr)", "Shekel", "Mina", "Talent", "Obol", 
+                "Slug (slug)", "Atomic Mass Unit (amu)", "Solar Mass (M☉)"
+            ]
+        elif converter == "Fluids":
+            units = [
+                "Milliliter (mL)", "Centiliter (cL)", "Deciliter (dL)", "Liter (L)", "Cubic Meter (m³)", 
+                "Cubic Centimeter (cm³)", "Cubic Millimeter (mm³)", "Teaspoon (tsp)", "Tablespoon (tbsp)", 
+                "Fluid Ounce (US)", "Fluid Ounce (Imperial)", "Cup (US)", "Cup (Metric)", "Cup (Imperial)", 
+                "Pint (US)", "Pint (Imperial)", "Quart (US)", "Quart (Imperial)", "Gallon (US)", "Gallon (Imperial)", 
+                "Fluid Dram (US)", "Fluid Dram (Imperial)", "Gill (US)", "Gill (Imperial)", "Barrel (Oil)", 
+                "Barrel (Beer, US)", "Barrel (Beer, UK)", "Hogshead (US)", "Hogshead (UK)", "Drop (gtt)", 
+                "Cubic Inch (in³)", "Cubic Foot (ft³)", "Cubic Yard (yd³)", "Acre-Foot (ac⋅ft)", "Board Foot"
+            ]
+        elif converter == "Time":
+            units = [
+                "Milliseconds (ms)", "Seconds (s)", "Minutes (min)", "Hours (hr)", "Days (d)", 
+                "Weeks (wk)", "Months (approx)", "Years (yr)", "Decades", "Centuries",
+                "Microseconds (µs)", "Nanoseconds (ns)", "Picoseconds (ps)"
+            ]
+        elif converter == "Energy":
+            units = [
+                "Joule (J)", "Kilojoule (kJ)", "Calorie (cal)", "Kilocalorie (kcal)",
+                "Watt-hour (Wh)", "Kilowatt-hour (kWh)", "Electronvolt (eV)", 
+                "British Thermal Unit (BTU)", "Therm"
+            ]
+        elif converter == "Power":
+            units = [
+                "Watt (W)", "Kilowatt (kW)", "Horsepower (hp)", "Foot-pound-force per second (ft·lbf/s)"
+            ]
+        elif converter == "Pressure":
+            units = [
+                "Pascal (Pa)", "Bar", "Atmosphere (atm)", "Pounds Per Square Inch (psi)", "Torr", "Millimeters of Mercury (mmHg)"
+            ]
+        else:
+            units = []  # Fallback for unknown converters
 
-        if converter == "Distance":
-            units = ["foot", "yard", "mile","nautical mile", "centimeter", "meter", "kilometer",
-                    "nanometer", "micrometer", "league", "chain", "rod", "cubit", "furlong"]
-            self.select_from.addItems(units)
-            self.select_to.addItems(units)
+        self.select_from.addItems(units)
+        self.select_to.addItems(units)
 
 
 
     def perform_conversion(self):
         """Perform the conversion, clear results, and display the calculation steps."""
+        from unit_converters.temperature import convert_temperature
+        from unit_converters.distance import convert_distance
+        from unit_converters.weight import convert_weight
+        from unit_converters.fluids import convert_fluids
+        from unit_converters.time import convert_time
+        from unit_converters.energy import convert_energy
+        from unit_converters.power import convert_power
+        from unit_converters.pressure import convert_pressure
+
         try:
             # Retrieve inputs from the UI
             converter = self.select_converter.currentText()
@@ -73,35 +132,41 @@ class CONVApp(QtWidgets.QWidget):
             value = float(value_text)  # Convert input to a float
 
             # Check if a valid converter is selected
+            
             if converter == "Temperature":
-                from unit_converters.temperature import convert_temperature
                 result, steps = convert_temperature(value, from_unit, to_unit)
 
-                # Clear previous results
-                self.display_results.clear()
-
-                # Display the steps and result
-                self.display_results.append("Conversion Steps:\n")
-                self.display_results.append(steps)
-
-                return  # Exit the function
-
             elif converter == "Distance":
-                from unit_converters.distance import convert_distance
                 result, steps = convert_distance(value, from_unit, to_unit)
 
-                # Clear previous results
-                self.display_results.clear()
+            elif converter == "Weight":
+                result, steps = convert_weight(value, from_unit, to_unit)
 
-                # Display the steps and result
-                self.display_results.append("Conversion Steps:\n")
-                self.display_results.append(steps)
+            elif converter == "Fluids":
+                result, steps = convert_fluids(value, from_unit, to_unit)
 
-                return  # Exit the function
+            elif converter == "Time":
+                result, steps = convert_time(value, from_unit, to_unit)
+            
+            elif converter == "Energy":
+                result, steps = convert_energy(value, from_unit, to_unit)
+            
+            elif converter == "Power":
+                result, steps = convert_power(value, from_unit, to_unit)
 
-            # Handle the case where no valid converter is selected
-            self.display_results.append("Error: No converter selected.")
+            elif converter == "Pressure":
+                result, steps = convert_pressure(value, from_unit, to_unit)
 
+            else:
+                self.display_results.append("Error: No converter selected.")
+                return
+
+            # Clear previous results
+            self.display_results.clear()
+
+            # Display the steps and result
+            self.display_results.append("Conversion Steps:\n")
+            self.display_results.append(steps)
 
         except ValueError as e:
             self.display_results.clear()
