@@ -15,10 +15,13 @@
 
 # About
 
+SimpleToolsuites Unit Converter (CONV) is designed to help you convert between a wide variety of units across multiple categories with ease and precision. wheter you're working with measurements for distance, weight, temperature, or even data storage, this plugin has you covered!
 
 ### Key Features
 
-
+- **Comprehensive Unit Categories:** Temperature, Distance, Weight, Fluids, Time, Energy, Power, Pressure, Velocity, Area, and Data Storage with more coming!
+- **Detailed Steps:** View the step-by-step calculators for each conversion, helping you understand the process and ensuring accuracy.
+- **User Friendly Interface:** A clean, intuitive ui with dropdowns for selecting units and categories.
 
 ## Installation
 
